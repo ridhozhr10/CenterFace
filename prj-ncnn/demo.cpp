@@ -2,10 +2,11 @@
 #include <opencv2/opencv.hpp>
 #include "ncnn_centerface.h"
 
-int main(int argc, char** argv) {
-	if (argc !=3)
+int main(int argc, char **argv)
+{
+	if (argc != 3)
 	{
-		std::cout << " .exe mode_path image_file" << std::endl;
+		std::cout << " .exe model_path image_file" << std::endl;
 		return -1;
 	}
 
@@ -22,15 +23,16 @@ int main(int argc, char** argv) {
 	ncnn::Mat inmat = ncnn::Mat::from_pixels(image.data, ncnn::Mat::PIXEL_BGR2RGB, image.cols, image.rows);
 	centerface.detect(inmat, face_info, image.cols, image.rows);
 
-	for (int i = 0; i < face_info.size(); i++) {
+	for (int i = 0; i < face_info.size(); i++)
+	{
 		cv::rectangle(image, cv::Point(face_info[i].x1, face_info[i].y1), cv::Point(face_info[i].x2, face_info[i].y2), cv::Scalar(0, 255, 0), 2);
-		for (int j = 0; j < 5; j++) {
-			cv::circle(image, cv::Point(face_info[i].landmarks[2*j], face_info[i].landmarks[2*j+1]), 2, cv::Scalar(255, 255, 0), 2);
-		}
+		std::cout << "x1:" << face_info[i].x1 << " "
+							<< "x2:" << face_info[i].x1 << " "
+							<< "y1:" << face_info[i].y1 << " "
+							<< "y2:" << face_info[i].y1 << " "
+							<< "score:" << face_info[i].score << std::endl;
 	}
 
-	cv::imshow("test", image);
-	cv::waitKey();
-
+	cv::imwrite("hasil.jpeg", image);
 	return 0;
 }

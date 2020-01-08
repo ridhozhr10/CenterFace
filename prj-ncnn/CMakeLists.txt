@@ -1,7 +1,7 @@
 #1.cmake verson
 cmake_minimum_required(VERSION 2.8)
 
-set DIR=your_ncnnlib_path
+set(DIR "/app/ncnn/ncnn/build/install")
 
 #2.project name
 project(demo C CXX)
@@ -10,7 +10,8 @@ project(demo C CXX)
 find_package(OpenCV REQUIRED)
 
 #3.set environment variable
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp")
+
 
 #4. include
 include_directories(${DIR}/include/ncnn
@@ -27,7 +28,8 @@ set_target_properties(
 #6.source directory
 file(GLOB TEST_SRC ${CMAKE_CURRENT_LIST_DIR}/cpp/*.cpp
                    ${CMAKE_CURRENT_LIST_DIR}/demo.cpp)
-set(TEST_COMPILE_CODE ${TEST_SRC})
+
+set(TEST_COMPILE_CODE ${TEST_SRC} )
 
 
 add_executable(demo ${TEST_COMPILE_CODE})

@@ -1,14 +1,15 @@
 #pragma once
-#include<vector>
-#include<iostream>
-#include<algorithm>
-#include<numeric>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <numeric>
 #include "net.h"
 
 #define NMS_UNION 1
-#define NMS_MIN  2
+#define NMS_MIN 2
 
-typedef struct FaceInfo {
+typedef struct FaceInfo
+{
 	float x1;
 	float y1;
 	float x2;
@@ -18,25 +19,26 @@ typedef struct FaceInfo {
 	float landmarks[10];
 };
 
-class Centerface {
+class Centerface
+{
 public:
 	Centerface();
 	~Centerface();
 
 	int init(std::string model_path);
 
-
 	//You can change the shape of input image by setting params :resized_w and resized_h
-	int detect(ncnn::Mat &inblob, std::vector<FaceInfo>&faces, int resized_w,int resized_h,
-		float scoreThresh = 0.5, float nmsThresh = 0.3);
+	int detect(ncnn::Mat &inblob, std::vector<FaceInfo> &faces, int resized_w, int resized_h,
+						 float scoreThresh = 0.5, float nmsThresh = 0.3);
 
 private:
 	void dynamicScale(float in_w, float in_h);
 	void squareBox(std::vector<FaceInfo> &faces);
 	void genIds(float *heatmap, int h, int w, float thresh, std::vector<int> &ids);
-	void nms(std::vector<FaceInfo>& input, std::vector<FaceInfo>& output, float nmsthreshold = 0.3,int type=NMS_MIN);
+	void nms(std::vector<FaceInfo> &input, std::vector<FaceInfo> &output, float nmsthreshold = 0.3, int type = NMS_MIN);
 	void decode(ncnn::Mat &heatmap, ncnn::Mat &scale, ncnn::Mat &offset, ncnn::Mat &landmarks,
-		std::vector<FaceInfo>&faces, float scoreThresh, float nmsThresh);
+							std::vector<FaceInfo> &faces, float scoreThresh, float nmsThresh);
+
 private:
 	ncnn::Net net;
 
@@ -51,5 +53,3 @@ private:
 	int image_h;
 	int image_w;
 };
-
-
