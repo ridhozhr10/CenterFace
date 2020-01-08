@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 as opencv-build
+FROM ubuntu:18.04 as builder
 # Reference:
 # https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
 RUN apt-get update
@@ -28,9 +28,10 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
   -D INSTALL_PYTHON_EXAMPLES=OFF \
   -D OPENCV_ENABLE_NONFREE=OFF \
   -D BUILD_SHARED_LIBS=OFF \
+  -D WITH_TIFF=OFF \
+  -D WITH_PNG=OFF \
   -D BUILD_EXAMPLES=OFF ..
 RUN make 
-RUN make install && ldconfig
 
 WORKDIR /app/ncnn
 RUN wget -O ncnn.zip https://github.com/Tencent/ncnn/archive/20200106.zip
@@ -40,7 +41,19 @@ RUN mv ncnn-20200106 ncnn
 WORKDIR /app/ncnn/ncnn/build
 RUN cmake -DNCNN_VULKAN=OFF .. && make && make install
 
-COPY . /app
+COPY ./prj-ncnn /prj-ncnn
+ENV OpenCV_DIR=/app/opencv/opencv/build
 
-WORKDIR /app/prj-ncnn
-RUN cmake . && make
+WORKDIR /prj-ncnn
+
+RUN cmake -D BUILD_SHARED_LIBS=OFF . && make
+
+FROM alpine
+
+COPY --from=builder /prj-ncnn/demo /app/detect
+
+COPY ./models/ncnn /app/models
+
+WORKDIR /data
+
+ENTRYPOINT [ "/app/detect", "/app/models" ]

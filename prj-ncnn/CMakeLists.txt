@@ -8,6 +8,8 @@ project(demo C CXX)
 
 #opencv
 find_package(OpenCV REQUIRED)
+set( OpenCV_STATIC ON )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 #3.set environment variable
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp")
@@ -36,5 +38,5 @@ add_executable(demo ${TEST_COMPILE_CODE})
 
 target_link_libraries(demo 
                       libncnn
-                      ${OpenCV_LIBS}
+                      ${OpenCV_LIBS} "-static -ljbig" 
 					  )
