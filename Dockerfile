@@ -7,9 +7,9 @@ RUN apt-get -y install build-essential cmake unzip pkg-config
 RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev
 
 RUN apt-get -y install software-properties-common
-RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main" 
-RUN apt-get update
-RUN apt-get -y install libjasper1 libjasper-dev
+# RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main" 
+# RUN apt-get update
+# RUN apt-get -y install libjasper1 libjasper-dev
 
 RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 RUN apt-get -y install libxvidcore-dev libx264-dev
@@ -30,6 +30,7 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
   -D BUILD_SHARED_LIBS=OFF \
   -D WITH_TIFF=OFF \
   -D WITH_PNG=OFF \
+  -D WITH_JASPER=OFF \
   -D BUILD_EXAMPLES=OFF ..
 RUN make 
 
@@ -39,7 +40,8 @@ RUN unzip ncnn.zip
 RUN mv ncnn-20200106 ncnn
 
 WORKDIR /app/ncnn/ncnn/build
-RUN cmake -DNCNN_VULKAN=OFF .. && make && make install
+COPY ./ncnn-build.sh /app/ncnn/ncnn/build
+RUN ./ncnn-build.sh && make && make install
 
 COPY ./prj-ncnn /prj-ncnn
 ENV OpenCV_DIR=/app/opencv/opencv/build
