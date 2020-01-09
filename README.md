@@ -12,7 +12,7 @@ $ cp <your_jpg_file>.jpg .
 $ docker run --rm -it -v $(pwd):/data centerface-alpine <your_jpeg_file>.jpg
 ```
 
-result image (with boundingbox) will be in `/<dir>/test/hasil.jpg
+result image (with boundingbox) will be in `/<dir>/test/hasil.jpg`
 
 ### test host
 
