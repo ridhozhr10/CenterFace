@@ -6,5 +6,5 @@ targetRepo="ridhozhr"
 
 target=${targetRepo}/${imageName}:${imageTag}
 
-sudo docker buildx build --platform linux/amd64,linux/arm/v7 \ 
-  --push -t ${target} .
+sudo docker buildx build --platform linux/amd64,linux/arm/v7 \
+  -t ${target} --push .
